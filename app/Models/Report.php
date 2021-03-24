@@ -18,35 +18,6 @@ class Report extends Model
         return $this->salary - $this->expenses - $this->rent;
     }
 
-    public function addToExpenses($amount){
-        $this->update([
-            'expenses' => $this->expenses + $amount,
-            'balance' => $this->balance - $amount
-        ]);
-    }
-
-    public function removeFromExpenses($amount){
-        $this->update([
-            'expenses' => $this->expenses - $amount,
-            'balance' => $this->balance + $amount
-        ]);
-    }
-
-    public function addToSalary($amount){
-        $this->update([
-            'salary' => $this->salary + $amount,
-            'balance' => $this->balance + $amount
-        ]);
-    }
-
-    public function removeFromSalary($amount){
-        $this->update([
-            'salary' => $this->salary - $amount,
-            'balance' => $this->balance - $amount
-        ]);
-    }
-
-
     public function getDurationAttribute(){
         return Carbon::parse($this->start_date)->diffForHumans(Carbon::parse($this->end_date), CarbonInterface::DIFF_ABSOLUTE);
     }

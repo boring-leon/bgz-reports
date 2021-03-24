@@ -8,22 +8,22 @@ class TransferObserver
 {
     public function created(Transfer $transfer){
         if($transfer->kwota > 0)
-            $transfer->report->addToSalary($transfer->kwota);
+            $transfer->report->increment('salary', $transfer->kwota);
         else
-            $transfer->report->addToExpenses($transfer->kwota);
+            $transfer->report->increment('expenses', $transfer->kwota);
     }   
 
     public function updated(Transfer $transfer){
         if($transfer->kwota > 0)
-            $transfer->report->addToSalary($transfer->kwota);
+            $transfer->report->increment('salary',$transfer->kwota);
         else
-            $transfer->report->addToExpenses($transfer->kwota);
+            $transfer->report->increment('expenses', $transfer->kwota);
     }
 
     public function deleted(Transfer $transfer){
         if($transfer->kwota > 0)
-            $transfer->report->removeFromSalary($transfer->kwota);
+            $transfer->report->decrement('salary', $transfer->kwota);
         else
-            $transfer->report->removeFromExpenses($transfer->kwota);
+            $transfer->report->decrement('expenses', $transfer->kwota);
     }
 }
