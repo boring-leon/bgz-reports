@@ -44,8 +44,11 @@ class ImportsController extends Controller
             'end_date' =>  $transfers->last()['data_zlecenia_operacji']
         ]);
         
-        Transfer::withoutEvents(function() use ($transfers, $report){
-            $transfers->each(function($transfer) use($report){
+        Transfer::withoutEvents(function() use ($transfers, $report, $request){
+            $transfers->filter(function($transfer) use($request){
+                return abs($transfer['kwota_zlecenia']) !== abs($request->rent);
+            })
+            ->each(function($transfer) use($report){
                 $report->transfers()->create($transfer);
             });
         });
