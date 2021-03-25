@@ -13,7 +13,7 @@ use App\Models\Transfer;
 
 class ImportsController extends Controller
 {
-    public function __invoke(Request $request, TransfersFilter $transfersFilter){
+    public function __invoke(Request $request){
         $this->validate($request, [
             'rent' => ['required', 'numeric', 'min:1'],
             'report' => ['required', 'file', new ExcelFile]
@@ -27,8 +27,8 @@ class ImportsController extends Controller
             ]);
         });
 
-        $transfers = $transfersFilter->withoutInternal($data);
-
+        $transfers = (new TransfersFilter($data))->withoutInternalTransfers()->withoutRentTransfer($request->rent)->get();
+    
         $expenses = $transfers->filter(function($transfer){ 
             return $transfer['kwota_zlecenia'] < 0; 
         })->sum('kwota_zlecenia');
@@ -38,17 +38,14 @@ class ImportsController extends Controller
         })->sum('kwota_zlecenia');
         
         $report = auth()->user()->reports()->create($request->only('rent') + [
-            'expenses' => abs($expenses) - $request->rent,
+            'expenses' => abs($expenses),
             'salary' => $salary,
             'start_date' => $transfers->first()['data_zlecenia_operacji'],
             'end_date' =>  $transfers->last()['data_zlecenia_operacji']
         ]);
         
-        Transfer::withoutEvents(function() use ($transfers, $report, $request){
-            $transfers->filter(function($transfer) use($request){
-                return abs($transfer['kwota_zlecenia']) !== abs($request->rent);
-            })
-            ->each(function($transfer) use($report){
+        Transfer::withoutEvents(function() use ($transfers, $report){
+            $transfers->each(function($transfer) use($report){
                 $report->transfers()->create($transfer);
             });
         });

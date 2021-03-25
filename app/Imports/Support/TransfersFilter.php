@@ -6,18 +6,34 @@ use Illuminate\Support\Collection;
 
 class TransfersFilter
 {
-    public function withoutInternal(Collection $transfers){
-        $count = $transfers->count();
-        $transfers->each(function($row, $index) use ($transfers, $count){
+    private ?Collection $data;
+
+    public function __construct(Collection $data){
+        $this->data = $data;
+    }
+    public function withoutInternalTransfers(){
+        $count = $this->data->count();
+        $this->data->each(function($row, $index) use ($count){
             if($index + 1 === $count) 
                 return;
                 
-            if($this->shouldRemoveRows($row, $transfers->get($index + 1))){
-                $transfers->forget([$index, $index+1]);
+            if($this->shouldRemoveRows($row, $this->data->get($index + 1))){
+                $this->data->forget([$index, $index+1]);
             }
         });
 
-        return $transfers;
+        return $this;
+    }
+
+    public function withoutRentTransfer($rent){
+        $this->data = $this->data->filter(function($transfer) use($rent){
+            return abs($transfer['kwota_zlecenia']) !== abs($rent);
+        });
+        return $this;
+    }
+
+    public function get(){
+        return $this->data;
     }
 
     private function shouldRemoveRows($row1, $row2){
