@@ -15,6 +15,7 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->unsignedBigInteger('user_id')->constrained();
             $table->foreign('user_id')->references('id')->on('users');
             $table->double('salary', null, 2);

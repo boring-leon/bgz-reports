@@ -11,7 +11,7 @@ class Report extends Model
     public $timestamps = false;
 
     public $fillable = [
-        'salary','rent','expenses',	'start_date','end_date'
+        'salary','rent','expenses',	'start_date','end_date', 'name'
     ];
 
     public function getBalanceAttribute(){

@@ -40,6 +40,7 @@ class ImportsController extends Controller
         $report = auth()->user()->reports()->create($request->only('rent') + [
             'expenses' => abs($expenses),
             'salary' => $salary,
+            'name' => $request->name,
             'start_date' => $transfers->first()['data_zlecenia_operacji'],
             'end_date' =>  $transfers->last()['data_zlecenia_operacji']
         ]);
