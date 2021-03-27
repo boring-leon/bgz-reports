@@ -15,7 +15,7 @@ class ImportsController extends Controller
 {
     public function __invoke(Request $request){
         $this->validate($request, [
-            'rent' => ['required', 'numeric', 'min:1'],
+            'rent' => ['required', 'numeric', 'min:0'],
             'report' => ['required', 'file', new ExcelFile]
         ]);
         
