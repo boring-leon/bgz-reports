@@ -11,6 +11,6 @@ class ExcelFile implements Rule
     }
 
     public function message(){
-        return 'Przesłany raport musi być arkuszem programu Excel!';
+        return 'Przesłany raport musi być arkuszem programu Excel, z włączonym trybem edycji!';
     }
 }
