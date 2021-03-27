@@ -2,6 +2,17 @@
     @csrf
 
     <div class="mt-4">
+        <x-label for="name" value="Nazwa raportu (opcjonalnie)" />
+        <x-input id="name" name="name" type="text" placeholder="Nazwa raportu" value="{{ old('name') }}" />
+    </div>
+
+    @error('name')
+    <div class="font-medium text-red-600">
+        {{ $message }}
+    </div>
+    @enderror
+
+    <div class="mt-4">
         <x-label for="rent" value="Czynsz" />
         <x-input id="rent" name="rent" type="number" step="0.01" placeholder="Czynsz" required value="{{ old('rent') }}" />
     </div>
