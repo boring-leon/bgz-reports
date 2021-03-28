@@ -29,4 +29,21 @@ class Report extends Model
     public function transfers(){
         return $this->hasMany(Transfer::class);
     }
+
+    public function syncStartDateWithTransfers(){
+        $this->update(['start_date' => 
+            $this->transfers()->orderBy('data_zlecenia_operacji', 'ASC')->first()->data_zlecenia_operacji
+        ]);
+    }
+
+    public function syncEndDateWithTransfers(){
+        $this->update(['end_date' => 
+            $this->transfers()->orderBy('data_zlecenia_operacji', 'DESC')->first()->data_zlecenia_operacji
+        ]);
+    }
+
+    public function syncDatesWithTransfers(){
+        $this->syncStartDateWithTransfers();
+        $this->syncEndDateWithTransfers();
+    }
 }
