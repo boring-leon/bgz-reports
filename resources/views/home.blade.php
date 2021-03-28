@@ -23,7 +23,7 @@
                     <div class="mt-3">
                        <p><b>Średnie wydatki:</b> {{ round(auth()->user()->reports->avg('expenses'), 2) }}zł </p>
                        <p><b>Średnie wpływy:</b> {{ round(auth()->user()->reports->avg('salary'), 2)  }}zł </p>
-                       <p><b>Średni okres raportu w dniach:</b> {{ $avg_report_period_days }} </p>
+                       <p><b>Średni okres raportu w dniach:</b> {{ auth()->user()->reports->avg('days_duration') }} </p>
                     </div>
                     <button class="bg-red-500 text-white font-bold py-2 px-4 rounded float-right relative bottom-10" onclick="document.querySelector('#avg-data').remove()">
                       Ukryj
@@ -37,10 +37,12 @@
                   <b class="text-{{$report->balance >=0 ? 'green' : 'red'}}-700">Bilans {{ $report->balance }}zł</b>
                   <hr>
                   <div class="mt-3">
-                     <p>Wydatki: {{ $report->expenses }}zł </p>
-                     <p>Wpływy: {{ $report->salary }}zł </p>
-                     <p>Czynsz: {{ $report->rent }}zł </p>
-                     <p>Okres: od {{ $report->start_date }} do {{ $report->start_date }} - {{ $report->duration }} </p>
+                     <p><b>Wydatki:</b> {{ $report->expenses }}zł </p>
+                     <p><b>Wpływy:</b> {{ $report->salary }}zł </p>
+                     <p><b>Czynsz:</b> {{ $report->rent }}zł </p>
+                     <p><b>Okres:</b> od {{ $report->start_date }} do {{ $report->end_date }} - {{ $report->human_duration }} 
+                      <b>({{ $report->days_duration }} dni)</b> 
+                     </p>
                   </div>
                   
                   <form action="{{ route('reports.destroy', ['report' => $report->id]) }}" method="POST">
